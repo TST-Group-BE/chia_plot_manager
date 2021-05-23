@@ -48,7 +48,7 @@ def setup_logging(default_path='/home/chia/plot_manager/chianas/logging.yaml', d
 
 
 def read_logging_config(file, section, status):
-    pathname = '/home/chia/chianas/plot_manager/' + file
+    pathname = '/home/chia/plot_manager/chianas' + file
     config.read(pathname)
     if status == "logging":
         current_status = config.getboolean(section, status)
