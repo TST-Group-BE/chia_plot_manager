@@ -139,9 +139,9 @@ while [ -h "$SOURCE" ]; do # resolve $SOURCE until the file is no longer a symli
   [[ $SOURCE != /* ]] && SOURCE="$DIR/$SOURCE" # if $SOURCE was a relative symlink, we need to resolve it relative to the path where the symlink file was located
 done
 current_directory="$( cd -P "$( dirname "$SOURCE" )" >/dev/null 2>&1 && pwd )"
-if [ $current_directory != '/chia/plot_manager' ]; then
+if [ $current_directory != '/home/chia/plot_manager' ]; then
     echo -e "\n ${red}* * * * *${white} IMPORTANT ${red}* * * * *${nc}${white} IMPORTANT ${red}* * * * *${nc}${white} IMPORTANT ${red}* * * * *${nc}"
-    echo -e "${green}All scripts assume that they have been installed at ${white}/chia/plot_manager${green}"
+    echo -e "${green}All scripts assume that they have been installed at ${white}/home/chia/plot_manager${green}"
     echo -e "and are configured as such. If you are changing the install directory,"
     echo -e "please review all scripts for the proper paths or they will fail${nc}.\n\n"
 else
@@ -228,7 +228,7 @@ final_notes(){
   echo -e "Have any trouble or issues, please feel free to reach me on my github page.\n"
   echo -e "Before you go, there are some files and configurations that you should check to make sure they"
   echo -e "agree with your configuration, otherwise you will have issues with the script(s)."
-  echo -e "By default, the file paths assume installation at /chia/plot_manager\n\n"
+  echo -e "By default, the file paths assume installation at /home/chia/plot_manager\n\n"
   echo -e "Please check the following files to see if they need to be changed:\n"
   echo -e "${green}$current_directory/auto_drive/auto_drive.py${nc}:"
   echo -e "   - Verify the following: chia_config_file, get_drive_uuid & file_system"

@@ -18,7 +18,7 @@ VERSION = "0.5 (2021-04-22)"
 
 import os
 import sys
-sys.path.append('/chia/plot_manager')
+sys.path.append('/home/chia/plot_manager')
 import logging
 import psutil
 import configparser
@@ -39,17 +39,17 @@ import subprocess
 # Are we testing?
 testing = False
 if testing:
-    plot_dir = '/chia/plot_manager/test_plots/'
+    plot_dir = '/home/chia/plot_manager/test_plots/'
     plot_size = 10000000
-    status_file = '/chia/plot_manager/local_transfer_job_running_testing'
-    drive_activity_test = '/chia/plot_manager/check_drive_activity.sh'
-    drive_activity_log = '/chia/plot_manager/drive_monitor.iostat'
+    status_file = '/home/chia/plot_manager/local_transfer_job_running_testing'
+    drive_activity_test = '/home/chia/plot_manager/check_drive_activity.sh'
+    drive_activity_log = '/home/chia/plot_manager/drive_monitor.iostat'
 else:
     plot_dir = '/mnt/enclosure1/front/column1/drive43'
     plot_size = 108644374730  # Based on K32 plot size
-    status_file = '/chia/plot_manager/local_transfer_job_running'
-    drive_activity_test = '/chia/plot_manager/check_drive_activity.sh'
-    drive_activity_log = '/chia/plot_manager/drive_monitor.iostat'
+    status_file = '/home/chia/plot_manager/local_transfer_job_running'
+    drive_activity_test = '/home/chia/plot_manager/check_drive_activity.sh'
+    drive_activity_log = '/home/chia/plot_manager/drive_monitor.iostat'
 
 
 
@@ -69,7 +69,7 @@ log.setLevel(level)
 # otherwise False/0
 config = configparser.ConfigParser()
 def read_config_data(file, section, item, bool):
-    pathname = '/chia/plot_manager/' + file
+    pathname = '/home/chia/plot_manager/' + file
     config.read(pathname)
     if bool:
         return config.getboolean(section, item)

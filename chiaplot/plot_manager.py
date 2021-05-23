@@ -42,7 +42,7 @@ VERSION = "0.5 (2021-04-22)"
 
 import os
 import sys
-sys.path.append('/chia/plot_manager')
+sys.path.append('/home/chia/plot_manager')
 import subprocess
 import logging
 from system_logging import setup_logging
@@ -62,15 +62,15 @@ network_interface = 'VLAN95_AR03_1-1' # Network interface (ifconfig) that plots 
 # Are we testing?
 testing = False
 if testing:
-    plot_dir = '/chia/plot_manager/test_plots/'
+    plot_dir = '/home/chia/plot_manager/test_plots/'
     plot_size = 10000000
-    status_file = '/chia/plot_manager/transfer_job_running_testing'
+    status_file = '/home/chia/plot_manager/transfer_job_running_testing'
 else:
     plot_dir = '/mnt/ssdraid/array0/'
     plot_size = 108644374730  # Based on K32 plot size
-    status_file = '/chia/plot_manager/transfer_job_running'
+    status_file = '/home/chia/plot_manager/transfer_job_running'
 
-remote_checkfile = '/chia/plot_manager/remote_transfer_is_active'
+remote_checkfile = '/home/chia/plot_manager/remote_transfer_is_active'
 
 # Setup Module logging. Main logging is configured in system_logging.py
 setup_logging()
@@ -104,14 +104,14 @@ def process_plot():
             log.info(f'Processing Plot: {plot_path}')
             try:
                 remote_mount = str(subprocess.check_output(
-                    ['ssh', nas_server, 'grep enclosure /chia/plot_manager/plot_manager_config | awk {\'print $3\'}']).decode(('utf-8'))).strip("\n")
+                    ['ssh', nas_server, 'grep enclosure /home/chia/plot_manager/plot_manager_config | awk {\'print $3\'}']).decode(('utf-8'))).strip("\n")
             except subprocess.CalledProcessError as e:
                 log.warning(e.output)  # TODO Do something here...cannot go on...
                 quit()
             log.debug(f'{nas_server} reports remote mount as {remote_mount}')
-            subprocess.call(['/home/chia/plot_manager/send_plot.sh', plot_path, plot_to_process])
+            subprocess.call(['/home/home/chia/plot_manager/send_plot.sh', plot_path, plot_to_process])
             try:
-                subprocess.call(['ssh', nas_server, '/chia/plot_manager/kill_nc.sh'])  # make sure all of the nc processes are dead on the receiving end
+                subprocess.call(['ssh', nas_server, '/home/chia/plot_manager/kill_nc.sh'])  # make sure all of the nc processes are dead on the receiving end
                 log.debug('Remote nc kill called!')
             except subprocess.CalledProcessError as e:
                 log.warning(e.output)
@@ -174,7 +174,7 @@ def process_control(command, action):
             except subprocess.CalledProcessError as e:
                 log.warning(e.output)
             try:
-                subprocess.call(['ssh', nas_server, '/chia/plot_manager/kill_nc.sh'])  # make sure all of the nc processes are dead on the receiving end
+                subprocess.call(['ssh', nas_server, '/home/chia/plot_manager/kill_nc.sh'])  # make sure all of the nc processes are dead on the receiving end
                 log.debug('Remote nc kill called!')
             except subprocess.CalledProcessError as e:
                 log.warning(e.output)
@@ -199,7 +199,7 @@ def verify_plot_move(remote_mount, plot_path, plot_to_process):
     log.debug(f'Local Plot Size Reported as: {local_plot_size}')
     if remote_plot_size == local_plot_size:
         try:
-            subprocess.check_output(['ssh', nas_server, 'touch %s' % '/chia/plot_manager/new_plot_received'])
+            subprocess.check_output(['ssh', nas_server, 'touch %s' % '/home/chia/plot_manager/new_plot_received'])
         except subprocess.CalledProcessError as e:
             log.warning(e.output)
         return True
