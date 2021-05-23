@@ -131,45 +131,45 @@ program_descripton = f'''
     from a cronjob on a regular basis. Please read the full information about how it works
     on my github page.
 
-    
+
     There are several commandline switches you can use to get immediate reports and feedback:
-    
+
 
     {green}-dr {nc}or{green} --drive_report{nc}       {blue}Runs the Daily ChiaNAS Report (if configured), and emails
                                 it to you. This can be called from a crontab job as well.{nc}
-    
+
     {green}-ct {nc}or{green} --check_temps{blue}        This will query all of your hard drives using {yellow}smartctl{blue} and
                                 return a list of drive temperatures to you.
-                                
-    {green}-pr {nc}or{green} --plot_report{blue}        This queries the NAS and returns a report letting you know 
+
+    {green}-pr {nc}or{green} --plot_report{blue}        This queries the NAS and returns a report letting you know
                                 how many plots are currently on the system and how many more
                                 you can add based on the current drive configuration. It also
                                 includes plotting speed information for the last 24 hours.{nc}
-    
+
     {green}-ud {nc}or{green} --update_daily{blue}       This updates the total number of plots the system has created
                                 over the past 24 hours. Use with {nc}CAUTION!{blue}. This {nc}should{blue} be ran
                                 from crontab once every 24 hours only! It updates the total
                                 from the last time is was run until now, hence why you should
                                 only run this once per 24 hours.{nc}
-    
+
     {green}-off {nc}or{green} --offline_hdd{blue}       This takes a drive as it's input (for example {yellow} drive6{blue}) and
-                                "{red}offlines{blue}" it so that no more plots will get written to it. 
+                                "{red}offlines{blue}" it so that no more plots will get written to it.
                                 You must {green}--on{blue} or {green}--online_hdd{blue} the drive for it to be used
                                 again. Useful if the drive is failing and needs to be replaced.
                                 You cannot "{red}offline{blue} a drive that is not mounted.
-    
+
     {green}-on {nc}or{green} --online_hdd{blue}         This takes a drive as it's input (for example {yellow} drive6{blue}) and
                                 "{green}onlines{blue}" it so that plots will get written to it. This option
-                                will be {nc}UNAVAILABLE{blue} if there are no drives that have been 
+                                will be {nc}UNAVAILABLE{blue} if there are no drives that have been
                                 offlined!{nc}
-                                
+
 
     USAGE:
     '''
 
 # Grab command line arguments if there are any
 def init_argparser():
-    with open('offlined_drives', 'r') as offlined_drives_list:
+    with open('/home/chia/plot_manager/chianas/offlined_drives', 'r') as offlined_drives_list:
         offlined_drives = [current_drives.rstrip() for current_drives in offlined_drives_list.readlines()]
     parser = argparse.ArgumentParser(description=program_descripton, formatter_class=RawFormatter)
     parser.add_argument('-v', '--version', action='version', version=f'{parser.prog} {VERSION}')
@@ -184,7 +184,7 @@ def init_argparser():
 
 
 def get_offlined_drives():
-    with open('offlined_drives', 'r') as offlined_drives_list:
+    with open('/home/chia/plot_manager/chianas/offlined_drives', 'r') as offlined_drives_list:
         offlined_drives = [current_drives.rstrip() for current_drives in offlined_drives_list.readlines()]
         if offlined_drives != None:
             return offlined_drives
@@ -378,7 +378,7 @@ def get_plot_drive_to_use():
          to make sure the drive selected has not been marked as "offline".
         #TODO incorporate in get_plot_drive_with_available_space()
         """
-    with open('offlined_drives', 'r') as offlined_drives_list:
+    with open('/home/chia/plot_manager/chianas/offlined_drives', 'r') as offlined_drives_list:
         offlined_drives = [current_drives.rstrip() for current_drives in offlined_drives_list.readlines()]
     available_drives = []
     for part in psutil.disk_partitions(all=False):
@@ -437,7 +437,7 @@ def online_offline_drive(drive, onoffline):
     else:
         if onoffline == 'offline':
             offlined_drives = []
-            with open('offlined_drives', 'r') as offlined_drives_list:
+            with open('/home/chia/plot_manager/chianas/offlined_drives', 'r') as offlined_drives_list:
                 offlined_drives = [current_drives.rstrip() for current_drives in offlined_drives_list.readlines()]
                 if drive in offlined_drives:
                     print()
@@ -446,7 +446,7 @@ def online_offline_drive(drive, onoffline):
                     log.debug(f'Drive: {drive} Already in offline mode!')
                 else:
                     offlined_drives.append(drive)
-                    with open('offlined_drives', 'w') as offlined_drive_list:
+                    with open('/home/chia/plot_manager/chianas/offlined_drives', 'w') as offlined_drive_list:
                         offlined_drive_list.writelines("%s\n"  % drives for drives in offlined_drives)
                         print()
                         print(f'Drive: {blue}{drive}{nc} Put into {red}OFFLINE{nc} mode! Plots will not be written to this drive!')
@@ -454,11 +454,11 @@ def online_offline_drive(drive, onoffline):
                         log.debug(f'Drive: {drive} Put into OFFLINE mode! Plots will not be written to this drive!')
         elif onoffline == 'online':
             offlined_drives = []
-            with open('offlined_drives', 'r') as offlined_drives_list:
+            with open('/home/chia/plot_manager/chianas/offlined_drives', 'r') as offlined_drives_list:
                 offlined_drives = [current_drives.rstrip() for current_drives in offlined_drives_list.readlines()]
                 if drive in offlined_drives:
                     offlined_drives.remove(drive)
-                    with open('offlined_drives', 'w') as offlined_drive_list:
+                    with open('/home/chia/plot_manager/chianas/offlined_drives', 'w') as offlined_drive_list:
                         offlined_drive_list.writelines("%s\n"  % drives for drives in offlined_drives)
                         print()
                         print(f'Drive: {blue}{drive}{nc} Put into {green}ONLINE{nc} mode! Plots will now be written to this drive!')
@@ -470,7 +470,7 @@ def online_offline_drive(drive, onoffline):
                     print()
                     log.debug(f'Drive: {drive} was not offline!')
         elif onoffline == 'check':
-            with open('offlined_drives', 'r') as offlined_drives_list:
+            with open('/home/chia/plot_manager/chianas/offlined_drives', 'r') as offlined_drives_list:
                 offlined_drives = [current_drives.rstrip() for current_drives in offlined_drives_list.readlines()]
                 if drive in offlined_drives:
                     return True
@@ -598,8 +598,8 @@ def space_report():
     print(f'{blue}############################################################{nc}')
     print('')
     print('')
-           
-           
+
+
 def temperature_report():
     print('')
     print(f'{blue}#################################################################{nc}')
