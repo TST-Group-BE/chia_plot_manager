@@ -10,7 +10,7 @@ VERSION = "V.1 (2021-03-15)"
 
 import sys
 import os
-sys.path.append('/root/plot_manager')
+sys.path.append('/home/chia/plot_manager')
 import yaml
 import logging.config
 import logging
@@ -18,7 +18,8 @@ import logging.handlers
 import configparser
 config = configparser.ConfigParser()
 
-def setup_logging(default_path='/home/chia/plot_manager/chianas/logging.yaml', default_level=logging.CRITICAL, env_key=>    """Module to configure program-wide logging. Designed for yaml configuration files."""
+def setup_logging(default_path='/home/chia/plot_manager/chianas/logging.yaml', default_level=logging.CRITICAL, env_key='LOG_CFG'):
+    """Module to configure program-wide logging. Designed for yaml configuration files."""
     log_level = read_logging_config('plot_manager_config', 'system_logging', 'log_level')
     log = logging.getLogger(__name__)
     level = logging._checkLevel(log_level)
@@ -36,7 +37,8 @@ def setup_logging(default_path='/home/chia/plot_manager/chianas/logging.yaml', d
                     logging.config.dictConfig(config)
                 except Exception as e:
                     print(e)
-                    print('Error in Logging Configuration. Using default configs. Check File Permissions (for a start)!>                    logging.basicConfig(level=default_level)
+                    print('Error in Logging Configuration. Using default configs. Check File Permissions (for a start)!')
+                    logging.basicConfig(level=default_level)
         else:
             logging.basicConfig(level=default_level)
             print('Failed to load configuration file. Using default configs')
@@ -60,3 +62,7 @@ def main():
     print("This is the systemwide logging module.")
     print("It is called by other modules.")
     exit()
+
+
+if __name__ == '__main__':
+    main()
